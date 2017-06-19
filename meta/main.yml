@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Aleksey Demidov
+  description: users role
+  issue_tracker_url: https://github.com/kashtan404/linux_users/issues
+  license: MIT
+  min_ansible_version: 1.2
+  github_branch: master
+  platforms:
+  - name: EL
+    versions:
+    - 7
+    - 6
+
+  galaxy_tags:
+  - kashtan404
+  - sudo
+  - user
+  - linux

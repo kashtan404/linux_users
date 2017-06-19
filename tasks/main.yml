@@ -1,0 +1,54 @@
+---
+
+- name: Create users
+  user:
+    generate_ssh_key: no
+    password: {{ linux_passwd }}
+    name: "{{ linux_user }}"
+    shell: /bin/bash
+
+- name: Set authorized_key to allow SSH based logins
+  authorized_key:
+    user: "{{ linux_user }}"
+    state: present
+    key: "{{ lookup('file', {{ key_path }}) }}"
+
+- name: Create sudoers.d directory
+  file:
+    path: /etc/sudoers.d
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Include sudoers.d
+  lineinfile:
+    dest: /etc/sudoers
+    line: "#includedir /etc/sudoers.d"
+    state: present
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Create sudoer files
+  template:
+    src: sudoers.d.j2
+    dest: "/etc/sudoers.d/{{ linux_user }}"
+    mode: 0440
+    owner: root
+    group: root
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Disable password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: restart sshd
+
+- name: Disable root ssh access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: restart sshd

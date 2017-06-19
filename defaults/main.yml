@@ -1,0 +1,4 @@
+---
+
+linux_user: admin
+key_path: '/home/admin/.ssh/id_rsa.pub'
