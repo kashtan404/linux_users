@@ -30,7 +30,7 @@ Example Playbook
 License
 -------
 
-MTP
+MIT
 
 Author Information
 ------------------
